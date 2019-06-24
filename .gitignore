@@ -13,6 +13,9 @@ bin/
 gen/
 out/
 
+# lib
+*.jar
+
 # Gradle files
 .gradle/
 build/
