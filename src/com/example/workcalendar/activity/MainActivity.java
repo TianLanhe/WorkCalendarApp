@@ -1,5 +1,6 @@
 package com.example.workcalendar.activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import com.example.workcalendar.utils.DataUtil;
 import com.example.workcalendar.view.MonthCalendar;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,6 +63,30 @@ public class MainActivity extends Activity {
 				tv_week.setText(weeks[localDate.getDayOfWeek() - 1]);
 			}
         });
+
+        
+        // 联网获取启动页提示文字
+        new Thread(new Runnable(){
+        	@Override
+			public void run() {
+        		String key = "jianglijie";
+        		
+        		SharedPreferences.Editor editor = MainActivity.this.getSharedPreferences("tip", MODE_PRIVATE).edit();
+				
+				// 从网络读取数据，如果有则将数据保存到本地，否则删除本地原有数据
+				try {
+					String tip;
+					tip = DataUtil.GetTipFromNet(key);
+					if(tip.equals("")){
+						editor.remove(key);
+					}else{
+						editor.putString(key, tip);
+					}
+					editor.commit();
+				} catch (IOException e) {
+				}
+        	}
+        }).start();
         
         // 联网或从本地获取日历
         painter = (InnerPainter)calendar.getCalendarPainter();

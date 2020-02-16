@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 public class DataUtil {
 
@@ -28,7 +27,7 @@ public class DataUtil {
 	private static final String REPLACE_STR_FILE = "_replace_string.dat";
 	private static final String REPLACE_COLOR_FILE = "_replace_color.dat";
 
-	private static final String DOMAIN_NAME = "http://47.107.96.73:16688";
+	private static final String DOMAIN_NAME = "http://138.128.197.157:16688";
 
 	private static boolean SaveDataToFile(Context context, String key,
 			String filename, Object object) {
@@ -170,6 +169,18 @@ public class DataUtil {
 		}
 
 		return replaceColorMap;
+	}
+
+	public static String GetTipFromNet(String key) throws IOException {
+		HttpURLConnection connect = connectURL("/workcalendar/gettip/" + key);
+		if(connect == null) {
+			throw new IOException("connect to host failed.");
+		}
+		
+		String resp = getJSONString(connect);
+		connect.disconnect();
+
+		return resp;
 	}
 
 	// 传入路径名(不包含协议头和域名)，打开并设置HTTP连接
